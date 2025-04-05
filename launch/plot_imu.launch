@@ -1,0 +1,8 @@
+<launch>
+    <node pkg="imu_data_analysis" type="plot_imu_orientation.py" name="plot_imu" output="screen">
+        <param name="imu_topic"  value="/microstrain/imu/data"/>
+        <param name="mag_topic"  value="/imu/mag"/>
+        <param name="odom_topic"  value="/lego_loam/odom"/>
+        <param name="file_path"  value="/bag_files/"/>
+    </node>
+</launch>
