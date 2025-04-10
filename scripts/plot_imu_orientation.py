@@ -15,7 +15,7 @@ rospack = rospkg.RosPack()
 PACKAGE_DIR = rospack.get_path('imu_data_analysis')
 
 
-apikey = rospy.get_param('api_key','AIzaSyABXV1ZF2nogIv0VMGpOSlAK7tebLcM_40')
+#apikey = rospy.get_param('api_key','AIzaSyABXV1ZF2nogIv0VMGpOSlAK7tebLcM_40')
 file_path = rospy.get_param('file_path','/bag_files/second_test/')
 
 BAG_DIR = PACKAGE_DIR + file_path
@@ -70,52 +70,52 @@ def extract_odom(bagfile,file_name):
     position_x.append((file_name,odom_data['pose.pose.position.x'].values))
     position_y.append((file_name,odom_data['pose.pose.position.y'].values))
 
-def extract_magnetic_field(bagfile,file_name):
+# def extract_magnetic_field(bagfile,file_name):
     
     
-    magnetic_csv_path = bagfile.message_by_topic(mag_topic)
-    magnetic_data = pd.read_csv(magnetic_csv_path)
+#     magnetic_csv_path = bagfile.message_by_topic(mag_topic)
+#     magnetic_data = pd.read_csv(magnetic_csv_path)
     
-    x_list = magnetic_data['magnetic_field.x'].values
-    y_list = magnetic_data['magnetic_field.y'].values
-    z_list = magnetic_data['magnetic_field.z'].values
-    time_list = magnetic_data['Time'].values
+#     x_list = magnetic_data['magnetic_field.x'].values
+#     y_list = magnetic_data['magnetic_field.y'].values
+#     z_list = magnetic_data['magnetic_field.z'].values
+#     time_list = magnetic_data['Time'].values
 
-    global magnetic_field_module,mag_time_vals
+#     global magnetic_field_module,mag_time_vals
     
-    magnetic_field_module_list = []
+#     magnetic_field_module_list = []
     
-    for i in range(len(x_list)):
-        magnetic_field_module_list.append(np.sqrt((x_list[i]*1e6)**2 + (y_list[i]*1e6)**2 + (z_list[i]*1e6)**2))
+#     for i in range(len(x_list)):
+#         magnetic_field_module_list.append(np.sqrt((x_list[i]*1e6)**2 + (y_list[i]*1e6)**2 + (z_list[i]*1e6)**2))
     
-    magnetic_field_module.append((file_name,magnetic_field_module_list[::10]))
-    mag_time_vals.append((file_name,time_list[::10]))
+#     magnetic_field_module.append((file_name,magnetic_field_module_list[::10]))
+#     mag_time_vals.append((file_name,time_list[::10]))
     
      
-def extract_gps (bagfile,file_name):
+# def extract_gps (bagfile,file_name):
     
     
-    gps_csv_path = bagfile.message_by_topic(gps_topic)
-    gps_data = pd.read_csv(gps_csv_path)
+#     gps_csv_path = bagfile.message_by_topic(gps_topic)
+#     gps_data = pd.read_csv(gps_csv_path)
     
-    gps_coordinates = []
+#     gps_coordinates = []
     
-    for i in range(len(gps_data['latitude'].values)):
-        gps = (gps_data['latitude'].values[i],gps_data['longitude'].values[i])
-        gps_coordinates.append(gps)
+#     for i in range(len(gps_data['latitude'].values)):
+#         gps = (gps_data['latitude'].values[i],gps_data['longitude'].values[i])
+#         gps_coordinates.append(gps)
         
-    coordinates.append((file_name,gps_coordinates))
+#     coordinates.append((file_name,gps_coordinates))
     
     
         
     
-def plot_map():
-    global coordinates,apikey
+# def plot_map():
+#     global coordinates,apikey
    
-    gmap = gmplot.GoogleMapPlotter(coordinates[0][0], coordinates[0][1], 14, apikey=apikey)    
-    trajectory = zip(*coordinates)
-    gmap.polygon(*trajectory, color='cornflowerblue', edge_width=10)
-    gmap.draw(f"{PACKAGE_DIR}/graphs/map.html")
+#     gmap = gmplot.GoogleMapPlotter(coordinates[0][0], coordinates[0][1], 14, apikey=apikey)    
+#     trajectory = zip(*coordinates)
+#     gmap.polygon(*trajectory, color='cornflowerblue', edge_width=10)
+#     gmap.draw(f"{PACKAGE_DIR}/graphs/map.html")
     
 def plot():
     fig, axes = plt.subplots(2, 2, figsize=(8, 6))  # 2 rows, 1 column
@@ -144,15 +144,15 @@ def plot():
     axes[0][1].grid()
     
     # Plot 3 - Magnetic Field
-    contador_tres = 0
-    for magnetic in magnetic_field_module:
-        axes[1][0].plot(mag_time_vals[contador_tres][1], magnetic[1])
-        contador_tres += 1
-    axes[1][0].set_xlabel("Time (s)")
-    axes[1][0].set_ylabel("Magnetic Field Module (uT)")
-    axes[1][0].set_title("Magnetic Field Module")
-    axes[1][0].legend()
-    axes[1][0].grid()
+    # contador_tres = 0
+    # for magnetic in magnetic_field_module:
+    #     axes[1][0].plot(mag_time_vals[contador_tres][1], magnetic[1])
+    #     contador_tres += 1
+    # axes[1][0].set_xlabel("Time (s)")
+    # axes[1][0].set_ylabel("Magnetic Field Module (uT)")
+    # axes[1][0].set_title("Magnetic Field Module")
+    # axes[1][0].legend()
+    # axes[1][0].grid()
 
     # Adjust layout
     plt.tight_layout()
@@ -176,7 +176,6 @@ if __name__ == "__main__":
 
         # Initialize ROS node
         rospy.init_node("plot_imu_orientation")
-
         for bagfile in bag_files:
             
             bagfile_dir = BAG_DIR + bagfile
